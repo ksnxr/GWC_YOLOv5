@@ -15,7 +15,6 @@ from itertools import repeat
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from subprocess import check_output
-from ensemble_boxes import weighted_boxes_fusion
 
 import cv2
 import numpy as np
@@ -728,23 +727,3 @@ def increment_path(path, exist_ok=False, sep='', mkdir=False):
     if not dir.exists() and mkdir:
         dir.mkdir(parents=True, exist_ok=True)  # make directory
     return path
-
-
-def get_lists(detections, img_size):
-    detections = detections[0].cpu().numpy()
-    # [xyxy, conf, cls]
-    if isinstance(img_size, int):
-        return detections[:, :4] / img_size, detections[:, 4], detections[:, 5]
-    else:
-        raise NotImplementedError
-
-
-def get_wbf(boxes_list, scores_list, labels_list, weights_list, img_size):
-    final_boxes, final_scores, final_labels = weighted_boxes_fusion(boxes_list, scores_list, labels_list,
-                                                                    weights=weights_list)
-    if isinstance(img_size, int):
-        results = torch.tensor([[*final_box, final_score, final_label] for final_box, final_score, final_label in
-                                zip(final_boxes * img_size, final_scores, final_labels)])
-        return [results]
-    else:
-        raise NotImplementedError

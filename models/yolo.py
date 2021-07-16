@@ -116,7 +116,7 @@ class Model(nn.Module):
 
     def forward(self, x, augment=False, profile=False):
         if augment:
-            return self.forward_augment(x)  # augmented inference, none
+            return self.forward_augment(x)  # augmented inference, None
         else:
             return self.forward_once(x, profile)  # single-scale inference, train
 
@@ -126,18 +126,12 @@ class Model(nn.Module):
         f = [None, 3, None]  # flips (2-ud, 3-lr)
         y = []  # outputs
         for si, fi in zip(s, f):
-            if fi == 2 or fi == 3:
-                temp = x.flip(fi)
-            elif fi == 4:
-                temp = x.flip(2).flip(3)
-            else:
-                temp = x
-            xi = scale_img(temp, si, gs=int(self.stride.max()))
+            xi = scale_img(x.flip(fi) if fi else x, si, gs=int(self.stride.max()))
             yi = self.forward_once(xi)[0]  # forward
             # cv2.imwrite(f'img_{si}.jpg', 255 * xi[0].cpu().numpy().transpose((1, 2, 0))[:, :, ::-1])  # save
             yi = self._descale_pred(yi, fi, si, img_size)
             y.append(yi)
-        return y, None  # augmented inference, train
+        return torch.cat(y, 1), None  # augmented inference, train
 
     def forward_once(self, x, profile=False):
         y, dt = [], []  # outputs
@@ -170,18 +164,12 @@ class Model(nn.Module):
                 p[..., 1] = img_size[0] - p[..., 1]  # de-flip ud
             elif flips == 3:
                 p[..., 0] = img_size[1] - p[..., 0]  # de-flip lr
-            elif flips == 4:
-                p[..., 1] = img_size[0] - p[..., 1]
-                p[..., 0] = img_size[1] - p[..., 0]
         else:
             x, y, wh = p[..., 0:1] / scale, p[..., 1:2] / scale, p[..., 2:4] / scale  # de-scale
             if flips == 2:
                 y = img_size[0] - y  # de-flip ud
             elif flips == 3:
                 x = img_size[1] - x  # de-flip lr
-            elif flips == 4:
-                y = img_size[0] - y
-                x = img_size[1] - x
             p = torch.cat((x, y, wh, p[..., 4:]), -1)
         return p
 
