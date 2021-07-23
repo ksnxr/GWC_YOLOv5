@@ -2,3 +2,8 @@
 # *Acknowledgement*: This is a fork of [YOLOv5](https://github.com/ultralytics/yolov5)
 
 Please view [GWC solution](https://github.com/ksnxr/GWC_solution) for detailed solution.
+
+## Changes
+1. Customized hyper parameters
+2. Direct generation of csv
+3. And other minor adjustments
