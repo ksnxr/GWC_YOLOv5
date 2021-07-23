@@ -3,7 +3,8 @@
 
 Please view [GWC solution](https://github.com/ksnxr/GWC_solution) for detailed solution.
 
-## Major changes
+## Changes
 1. Integrate [weighted boxes fusion](https://github.com/ZFTurbo/Weighted-Boxes-Fusion)
 2. Customized hyper parameters
 3. Direct generation of csv
+4. And other minor adjustments
