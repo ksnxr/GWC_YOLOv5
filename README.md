@@ -7,4 +7,4 @@ Please view [GWC solution](https://github.com/ksnxr/GWC_solution) for detailed s
 1. Integrate [weighted boxes fusion](https://github.com/ZFTurbo/Weighted-Boxes-Fusion)
 2. Customized hyper parameters
 3. Direct generation of csv
-4. And other minor adjustments
+4. And other minor adjustments (Including a not-that-successful integration of [Invariant Risk Minimization](https://arxiv.org/abs/1907.02893), partly inspired by [DG YOLO](https://github.com/mousecpn/DG-YOLO))
